@@ -129,6 +129,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	MoveType movetype = GetEntityMoveType(client);
 	if(movetype == MOVETYPE_NONE || movetype == MOVETYPE_NOCLIP || movetype == MOVETYPE_LADDER || GetEntProp(client, Prop_Data, "m_nWaterLevel") >= 2)
 	{
+		// otherwise the first tick after a freeze or ladder moves with whatever angles were stored before it
+		g_fLastAngles[client] = angles;
 		return Plugin_Continue;
 	}
 
