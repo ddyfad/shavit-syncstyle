@@ -28,7 +28,7 @@ public Plugin myinfo = {
 	name = "Sync style for shavit.",
 	author = "nimmy",
 	description = "Provides sync style.",
-	version = "1.2.0",
+	version = "1.2.1",
 	url = "https://github.com/Nimmy2222/shavit-syncstyle"
 };
 
@@ -89,6 +89,12 @@ void InitializeTeleportDHook()
 
 public MRESReturn DHooks_OnTeleport(int client, Handle hParams)
 {
+	// Plugins set velocity through Teleport with no origin; only a real move should hold off the strafing.
+	if(DHookIsNullParam(hParams, 1))
+	{
+		return MRES_Ignored;
+	}
+
 	g_iTicksSinceTeleport[client] = 0;
 	return MRES_Ignored;
 }
