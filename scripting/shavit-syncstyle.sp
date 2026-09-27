@@ -42,7 +42,7 @@ public void OnPluginStart()
 	InitializeTeleportDHook();
 	AutoExecConfig();
 
-	for(int i = 0; i < MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 	{
 		if(IsValidClient(i))
 		{
@@ -71,13 +71,13 @@ void InitializeTeleportDHook()
 	Handle gamedataConf = LoadGameConfigFile("sdktools.games");
 	if (gamedataConf == INVALID_HANDLE)
 	{
-		LogError("Shavit-Syncstyle: Couldn't load Gamedata: sdktools.games");
+		SetFailState("Couldn't load gamedata sdktools.games");
 	}
 
 	int offset = GameConfGetOffset(gamedataConf, "Teleport");
 	if (offset == -1)
 	{
-		LogError("Shavit-Syncstyle: Couldn't load Teleport DHook.");
+		SetFailState("Couldn't find the Teleport offset");
 	}
 
 	g_hTeleportDhook = new DynamicHook(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity);
@@ -107,11 +107,6 @@ public void OnClientPutInServer(int client)
 		return;
 	}
 	g_hTeleportDhook.HookEntity(Hook_Post, client, DHooks_OnTeleport);
-
-	if(!g_hTeleportDhook)
-	{
-		LogError("Failed to Dhook Teleport on client %i.", client);
-	}
 }
 
 public void Shavit_OnStyleChanged(int client, int oldstyle, int newstyle)
